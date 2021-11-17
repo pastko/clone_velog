@@ -1,125 +1,145 @@
-// const defaultURL = process.env.REACT_APP_SERVER_URL;
+const defaultURL = process.env.REACT_APP_SERVER_URL
 
-// const SET_POST = 'SET_POST';
-// const SET_DETAIL_POST = 'SET_DETAIL_POST';
+const SET_POSTS = 'SET_POSTS'
+const SET_DETAIL_POST = 'SET_DETAIL_POST'
 
-// export const setPost = (post) => ({
-//     type: SET_POST,
-//     post
-// });
+const initialState = {
+    posts: [],
+    detailPost: [],
+}
 
-// export const setDetailPost = (post) => ({
-//     type: SET_DETAIL_POST,
-//     post
-// });
+export const setPosts = (posts) => ({
+    type: SET_POSTS,
+    posts,
+})
 
-// const initialState = {
-//     posts: [],
-//     detailPost: [],
-// }
+export const setDetailPost = (detailPost) => ({
+    type: SET_DETAIL_POST,
+    detailPost,
+})
 
-// const setDetailPostAPI = (postIdx) => {
-//     return (dispatch, getState, {
-//         history
-//     }) => {
-//         axios.get(`/detail/${postIdx}`).then((res) => {
-//             console.log('getPost result :: ', res.data);
-//             dispatch(setDetailPost(res.data));
-//         })
-//     }
-// }
+const getPostsByUserId = (pageNum) => {
+    return (dispatch, getState, { history }) => {
+        fetch(`${defaultURL}/post?pageNum=${pageNum}`, {
+            method: 'GET',
+            headers: {
+                authorization: sessionStorage.getItem('key'),
+                'X-USER-ID': sessionStorage.getItem('mail'),
+            },
+        })
+            .then((res) => {
+                return res.json()
+            })
+            .then((data) => {
+                console.log('getPostsByUserId data:: ', data)
+                //dispatch(setPosts());
+            })
+    }
+}
 
-// const setDetailPostByIdAPI = () => {
-//     return (dispatch, getState, {
-//         history
-//     }) => {
-//         axios.get(`/detail`, {
-//             headers: {
-//                 'authorization': sessionStorage.getItem('key'),
-//                 'X-USER-ID': sessionStorage.getItem('mail')
-//             }
-//         }).then((res) => {
-//             console.log('getPostById :: ', res.data);
-//             dispatch(setDetailPost(res.data));
-//         })
-//     }
-// }
+const getDetailPostAPI = (postIdx) => {
+    return (dispatch, getState, { history }) => {
+        fetch(`${defaultURL}/detail?idx=${postIdx}`, {
+            method: 'GET',
+        })
+            .then((res) => {
+                return res.json()
+            })
+            .then((data) => {
+                console.log('getDetailPostAIP :: ', data)
+                //dispatch(setDetailPost());
+            })
+    }
+}
 
-// const addPostAPI = (post) => {
-//     return (dispatch, getState, {
-//         history
-//     }) => {
-//         axios.post(`/write`, {
-//             headers: {
-//                 'authorization': sessionStorage.getItem('key'),
-//                 'X-USER-ID': sessionStorage.getItem('mail')
-//             },
-//             body: JSON.stringify({
-//                 post
-//             })
-//         }).then((res) => {
-//             console.log('addPost :: ', res.data);
-//             //TODO: message: ok / message: fail
-//             history.push('/');
-//         })
-//     }
-// }
+const addPostAPI = (posts) => {
+    return (dispatch, getState, { history }) => {
+        fetch(`${defaultURL}/write`, {
+            method: 'POST',
+            header: {
+                authorization: sessionStorage.getItem('key'),
+                'X-USER-ID': sessionStorage.getItem('mail'),
+            },
+            body: JSON.stringify(posts),
+        })
+            .then((res) => {
+                return res.JSON()
+            })
+            .then((data) => {
+                console.log('addPostAPI : ', data)
+                //dispatch(setDetailPost());
+            })
+    }
+}
 
-// const changePostAPI = (postIdx, post) => {
-//     return (dispatch, getState, {
-//         history
-//     }) => {
-//         axios.get(`/write/${postIdx}`, post).then((res) => {
-//             console.log('changePost :: ', res.data);
-//             dispatch(setDetailPost(res.data));
-//         })
-//     }
-// }
+const changePostAPI = (postIdx, detailPost) => {
+    return (dispatch, getState, { history }) => {
+        fetch(`${defaultURL}/write`, {
+            method: 'POST',
+            header: {
+                authorization: sessionStorage.getItem('key'),
+                'X-USER-ID': sessionStorage.getItem('mail'),
+            },
+            body: JSON.stringify({
+                postIdx: postIdx,
+                contents: detailPost,
+            }),
+        })
+            .then((res) => {
+                return res.JSON()
+            })
+            .then((data) => {
+                console.log('changePostAPI : ', data)
+                //dispatch(setDetailPost());
+            })
+    }
+}
 
-// const removePostAPI = (postIdx) => {
-//     return (dispatch, getState, {
-//         history
-//     }) => {
-//         axios.post(`/deletepost`, {
-//             headers: {
-//                 'authorization': sessionStorage.getItem('key'),
-//                 'X-USER-ID': sessionStorage.getItem('mail')
-//             },
-//             body: JSON.stringify({
-//                 postIdx
-//             })
-//         }).then((res) => {
-//             console.log('removePost :: ', res.data);
-//             history.push('/')
-//         })
-//     }
-// }
+const removePostAPI = (postIdx) => {
+    return (dispatch, getState, { history }) => {
+        fetch(`${defaultURL}/deletepost`, {
+            headers: {
+                authorization: sessionStorage.getItem('key'),
+                'X-USER-ID': sessionStorage.getItem('mail'),
+            },
+            body: JSON.stringify({
+                postIdx,
+            }),
+        })
+            .then((res) => {
+                return res.JSON()
+            })
+            .then((data) => {
+                console.log('removePostAPI : ', data)
+                // TODO: modal 띄우기
+                //history.pop('/')
+            })
+    }
+}
 
-// export default function board(state = initialState, action) {
-//     switch (action.type) {
-//         case SET_POST:
-//             return {
-//                 ...state,
-//                 posts: action.posts
-//             };
-//         case SET_DETAIL_POST:
-//             return {
-//                 ...state,
-//                 detailPost: action.detailPost
-//             };
-//         default:
-//             return state;
-//     }
-// }
+export default function board(state = initialState, action) {
+    switch (action.type) {
+        case SET_POSTS:
+            return {
+                ...state,
+                posts: [...action.posts],
+            }
+        case SET_DETAIL_POST:
+            return {
+                ...state,
+                detailPost: action.detailPost,
+            }
+        default:
+            return state
+    }
+}
 
-// const actionCreator = {
-//     setDetailPostAPI,
-//     setDetailPostByIdAPI,
-//     addPostAPI,
-//     changePostAPI,
-//     removePostAPI
-// }
+const actionCreator = {
+    getPostsByUserId,
+    getDetailPostAPI,
+    addPostAPI,
+    changePostAPI,
+    removePostAPI,
+}
 
-// export {
-//     actionCreator
-// };
+export { actionCreator }
