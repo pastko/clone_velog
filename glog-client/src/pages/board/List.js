@@ -1,8 +1,19 @@
-import styled from "styled-components";
-import Card from '../../components/board/list/Card';
-import UserInfo from '../../components/board/element/UserInfo';
+import styled from 'styled-components'
+import Card from '../../components/board/list/Card'
+import UserInfo from '../../components/board/element/UserInfo'
+import { actionCreator as boardActions } from '../../store/reducer/board'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
 function List() {
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(boardActions.getPostsByUserId(0))
+    }, [dispatch])
+
+    const contents = useSelector((state) => state.board)
+
     return (
         <StyledPostList>
             <UserInfo />
@@ -13,12 +24,12 @@ function List() {
                 preview="안녕하세요. test입니다."
             />
         </StyledPostList>
-    );
+    )
 }
 
 const StyledPostList = styled.div`
-     @media (max-width: 1440px) {
-        width: 1280px
+    @media (max-width: 1440px) {
+        width: 1280px;
     }
     @media (max-width: 1280px) {
         width: 768px;
@@ -28,7 +39,6 @@ const StyledPostList = styled.div`
     }
     max-width: 1280px;
     margin: 0 auto;
-    
-`;
+`
 
-export default List;
+export default List
