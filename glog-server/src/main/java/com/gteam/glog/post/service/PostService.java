@@ -21,6 +21,7 @@ public class PostService {
     public String createPost(PostRequestDTO postRequestDTO, String id) {
         PostContentsDTO postContentsDTO = new PostContentsDTO();
 
+        postContentsDTO.setIdx(postRequestDTO.getPostIdx());
         postContentsDTO.setContents(postRequestDTO.getContents());
         postContentsDTO.setTitle(postRequestDTO.getTitle());
         postContentsDTO.setNikNm(postRequestDTO.getNikNm());
@@ -42,6 +43,6 @@ public class PostService {
     }
 
     public String deletePost(PostRequestDTO requestDTO) {
-        return postRepository.deletePost(requestDTO.getIdx());
+        return postRepository.deletePost(requestDTO.getPostIdx());
     }
 }

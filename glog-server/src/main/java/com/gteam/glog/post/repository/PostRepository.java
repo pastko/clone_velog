@@ -29,28 +29,30 @@ public class PostRepository {
         Board board = new Board();
         Contents contents = new Contents();
         LocalDate now = LocalDate.now();
-
         try {
-            String query = "select u from usr u where mail=" + postContentsDTO.getId();
-            Users users = (Users) entityManager.createQuery(query);
-            query = "select m from mypg m where usr_idx=" + users.getIdx();
-            Mypage mypage = (Mypage) entityManager.createQuery(query);
+            if(postContentsDTO.getIdx() == 0) {
+                String query = "select u from usr u where mail=" + postContentsDTO.getId();
+                Users users = (Users) entityManager.createQuery(query);
+                query = "select m from mypg m where usr_idx=" + users.getIdx();
+                Mypage mypage = (Mypage) entityManager.createQuery(query);
 
-            board.setUsr_idx(mypage);
-            contents.setBoard(board);
-            contents.setTitle(postContentsDTO.getTitle());
-            contents.setContents(postContentsDTO.getContents());
-            contents.setImg_nm(postContentsDTO.getImgNm());
-            contents.setCreateDt(now.toString());
-            contents.setUpdateDt(now.toString());
-            contents.setTag(postContentsDTO.getTag());
+                board.setUsr_idx(mypage);
+                contents.setBoard(board);
+                contents.setTitle(postContentsDTO.getTitle());
+                contents.setContents(postContentsDTO.getContents());
+                contents.setImg_nm(postContentsDTO.getImgNm());
+                contents.setCreateDt(now.toString());
+                contents.setUpdateDt(now.toString());
+                contents.setTag(postContentsDTO.getTag());
 
-            entityManager.persist(board);
-            entityManager.persist(contents);
+                entityManager.persist(board);
+                entityManager.persist(contents);
 
-            entityManager.flush();
-            entityManager.close();
+                entityManager.flush();
+                entityManager.close();
+            } else {
 
+            }
             return "ok";
         } catch (Exception e) {
             return null;
@@ -91,7 +93,6 @@ public class PostRepository {
             return null;
         }
     }
-
     public String deletePost(int idx) {
         try {
             String query = "select c from bord_cont c where bord_idx=" + idx;
