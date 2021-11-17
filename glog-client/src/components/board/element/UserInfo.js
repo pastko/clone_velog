@@ -1,22 +1,32 @@
-import styled from "styled-components";
-import Images from "../../layout/Images";
-import { Link } from "react-router-dom";
+import styled from 'styled-components'
+import Images from '../../layout/Images'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 function UserInfo() {
+    const users = useSelector((state) => state.user)
+    console.log('users :: ', users);
     return (
         <Block>
             <StyledUserInfo>
                 <Link to="">
-                    <Images src='/mypage/thumbnail/DefaultImg.png' shape='circle' width={128} height={128} />
+                    <Images
+                        src="/mypage/thumbnail/DefaultImg.png"
+                        shape="circle"
+                        width={128}
+                        height={128}
+                    />
                     <div className="userInfo">
-                        <span className="name">glog</span>
-                        <span className="intro">glog사용자의 블로그 입니다.</span>
+                        <span className="name">이름</span>
+                        <span className="intro">
+                            인사말
+                        </span>
                     </div>
                 </Link>
             </StyledUserInfo>
             <div className="line"></div>
         </Block>
-    );
+    )
 }
 const Block = styled.div`
     max-width: 768px;
@@ -27,8 +37,8 @@ const Block = styled.div`
         height: 1px;
         margin-top: 2rem;
         margin-bottom: 3rem;
-    }  
-`;
+    }
+`
 const StyledUserInfo = styled.div`
     margin-top: 5.625rem;
     display: flex;
@@ -52,6 +62,6 @@ const StyledUserInfo = styled.div`
             display: block;
         }
     }
-`;
+`
 
-export default UserInfo;
+export default UserInfo
