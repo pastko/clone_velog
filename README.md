@@ -1,129 +1,108 @@
-# 배포 링크
-* [client 배포 링크](http://glog-s3-bucket.s3-website.ap-northeast-2.amazonaws.com/)
-* [server  링크](http://ec2-3-34-177-235.ap-northeast-2.compute.amazonaws.com:8080/login?from=%2F)
+## 1. Intro
 
-# 커밋 메시지 규칙
-1. function별 기능구현이 완료 되었을 때만 commit 가능
-2. 한 줄로 메세지 작성해주세요.
-3. 형태 : 브랜치명 변경사항
-4. 영어로 작성
-- 추가 : add
-- 수정 : change
-- 삭제 : delete 
-## 예시
-```
-feature/login add function validation
-``` 
-❗ ing 금지
+---
+![logo](https://user-images.githubusercontent.com/76991091/142601121-1682fd62-294b-4269-8cc2-034336278de7.png)
 
-# Lint 규칙
-- eslint air bnb 규칙에 따릅니다.
-## 주요 규칙
-- tab (공백 4번) 사용
-- var 사용 금지
-- 중괄호는 매소드 옆으로 붙이기
-- js, java 모두 ;(세미콜론) 사용
-- js : single quote을 기본으로 사용
+## Team
 
-# 브랜치 이름 형식
-|종류|사용패턴|특징|
-|------|---|---|
-|master|master|최종 버전|
-|alpha|alpha|beta 버전 - 3일에 한번씩 배포|
-|dev|dev|개발 버전 - PR병합|
-|feature|feature/function-name|개발 진행|
+- **팀 명 :** G-Team( Good Team )
 
-# PR 규칙
-- 코드리뷰는 상시 진행
-1. PR 진행 시 코더는 본인 외에 다른 팀원 reviewer로 선택한 후 PR하기
-2. 코드리뷰는 작성자 외에 다른분들이 모두 확인 후 approve혹은 code review를 진행합니다.
-3. 코더는 reviewer가 지적한 부분에 대해 모두 수정을 후 push
-4. 수정한 코드를 확인 후 리뷰어는 approve를 다음날 오후 1시전까지 눌러준다.
-5. 모두 approve가 된다면 당일 merge 가능
+## Project
 
-- 리뷰가 있는 경우 approve가 없을 시 PR 불가
-- PR 시간 : 오후 1시~1시반 다 같이 진행<br>
-  (리뷰가 없는 경우 전날 올라온 PR은 모두 merge를 합니다.) 
-- PR 메시지 확인 후 리뷰어 3명은 ✅ 표시하기
+- **프로젝트 명 :** Glog
+- **프로젝트 기간 :** 11월 1일 - 11월 14일
+- 프로젝트 Notion
+    - [Final 우선순위](https://www.notion.so/Final-f7204d586ace41b98df96b317ddf9886)
+    - [Server API](https://www.notion.so/cac3109949554592a722b0d56166672c)
+- **프로젝트 Repository:** https://github.com/codestates/g_log
+    - 배포 URL: [http://glog.cf.s3-website.ap-northeast-2.amazonaws.com/](http://glog.cf.s3-website.ap-northeast-2.amazonaws.com/) ( CORS )
 
-## PR 제목
-```
-[client/back] / 수정사항 간단하게 한글로 설명
-```
-## PR 본문
-```
-### PR 타입(하나 이상의 PR 타입을 선택해주세요)
--[] 기능 추가
--[] 기능 삭제
--[] 버그 수정
--[] 의존성, 환경 변수, 빌드 관련 코드 업데이트
+## 2. Project
 
-### 변경 사항
-ex) 로그인 시, 구글 소셜 로그인 기능을 추가했습니다.
+---
 
-### 테스트 결과(필수X)
-ex) 베이스 브랜치에 포함되기 위한 코드는 모두 정상적으로 동작해야 합니다. 결과물에 대한 스크린샷, GIF, 혹은 라이브 데모가 가능하도록 샘플API를 첨부할 수도 있습니다.
-```
+## Introduce
 
-# Issue 형식
-## Issue 제목
-```
-[client/server] / 제목
-```
-## Issue 형식
-```
-### Issue 타입(하나 이상의 Issue 타입을 선택해주세요)
--[] 프로젝트 세팅
--[] UI 추가
--[] UI 수정
--[] UI 삭제
--[] 기능 추가
--[] 기능 추가
--[] 기능 삭제
--[] 버그 수정
--[] 의존성, 환경 변수, 빌드 관련 코드 업데이트
+개발자들은 개발한다?
 
-### 상세 내용
-ex) Github 소셜 로그인 기능이 필요합니다.
+No! 기록은 곧 나를 표현하는 도구가 됩니다. 
+하루하루 쌓이는 나의 이야기로, 내가 어떤 개발자인지 표현하고, 
+다른 개발자들의 관심사와 소통을 할 수 있는 공간입니다.
 
-### 예상 소요 시간
--[] `0.5h`
--[] `1h`
--[] `1.5h`
--[] `2h`
--[] `2.5h`
--[] `3h`
+CRUD의 기본인 게시판 구현을 목적으로
+게시판 밴치마킹한 것 중 
+개발자들이 많이 사용하는 velog를 clone coding을 해보았습니다.
 
-### 라벨
-- 그룹: `client`, `server`
-- 긴급도: `High`, `Middle`, `Low`
+## Architecture & Stack
+![Arcitecture & Stack](https://user-images.githubusercontent.com/76991091/142601543-f7922783-272e-491b-b1a5-563088e39ddf.png)
 
-```
+**Stack List**
 
-# 명명규칙
-## 변수 이름 - Camel
-```
-clientLogin
-```
-## 파일 & 생성자 이름 - Pascal
-```
-ClientSide
-```
-## AWS
-- EC2 프리 티어
-- os : Red Hat
-- Instance Name : gTeam-glog
-- Host : ec2-3-34-94-52.ap-northeast-2.compute.amazonaws.com
+<aside>
+👥 **Front-End**
+</aside>
 
-## RDS
-- DB Name :  glog-databases-1
-- DBMS : MySQL
+- React
+- Redux
+- Javascript
+(ES6)
+- React-Hooks
+- Axios
+- Toast Editor UI
+- MUI
 
-## S3
-- Host : http://glog-bucket-deploy.s3-website.ap-northeast-2.amazonaws.com
+<aside>
+🧩 **Back-End**
+</aside>
+
+- Spring boot
+- Spring Security
+- Spring Data JPA
+- JWT
+- Gradle
+
+<aside>
+⚙ **Deploy**
+</aside>
+
+- EC2
+- S3
+- RDS(MySQL)
+- Jenkins
+- CodePipeline
+- CodeBuilder
+- Codedeploy
+
+<aside>
+💡 Tools
+</aside>
+
+- Git hub
+- VSCode
+- IntelliJ
+- DB Diagram
+- Figma
+- Postman
+- Procreate
+
+## Flow Chart
+
+### **Client-Side**
+![client_flow_chart](https://user-images.githubusercontent.com/76991091/142601678-7825ae34-290d-40dc-9a95-838f45dfbbdc.jpg)
+
+### Server**-Side ( 진행중 )**
+
+## DB schema
+![DB_Schema](https://user-images.githubusercontent.com/76991091/142602161-e8ec5a39-7100-44e0-8ca1-0b3a8b0062f4.png)
 
 
-# 버전 통일
-## node & npm 버전 통일
-- node v16.X.X
-- npm v7.X.X
+
+## UI Design
+
+- 회원가입, 로그인, 마이페이지
+![Login_mypage](https://user-images.githubusercontent.com/76991091/142601802-e7128bd3-c10e-4a91-877e-c7fa56ef91b2.gif)
+    
+- 로그인, 게시물 작성 및 확인
+
+    
+- 메인
