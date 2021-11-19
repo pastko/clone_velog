@@ -94,15 +94,3 @@ CRUD의 기본인 게시판 구현을 목적으로
 
 ## DB schema
 ![DB_Schema](https://user-images.githubusercontent.com/76991091/142602161-e8ec5a39-7100-44e0-8ca1-0b3a8b0062f4.png)
-
-
-
-## UI Design
-
-- 회원가입, 로그인, 마이페이지
-![Login_mypage](https://user-images.githubusercontent.com/76991091/142601802-e7128bd3-c10e-4a91-877e-c7fa56ef91b2.gif)
-    
-- 로그인, 게시물 작성 및 확인
-
-    
-- 메인
