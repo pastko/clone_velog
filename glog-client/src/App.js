@@ -1,32 +1,29 @@
-import styled from 'styled-components';
-import { Switch, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Header from "./components/common/Header";
-import Profile from './pages/mypage/Profile';
-import Write from './pages/board/Write';
-import List from './pages/board/List';
-import Detail from './pages/board/Detail';
+import styled from 'styled-components'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Header from './components/common/Header'
+import Profile from './pages/mypage/Profile'
+import Write from './pages/board/Write'
+import List from './pages/board/List'
+import Detail from './pages/board/Detail'
 
 function App() {
-
   return (
-    <Switch>
-      <Route path="/post/write" exact component={Write} />
-      <Route
-        exact
-        path="*"
-        component={() => (
-          <StyledWithHeader>
-            <Header />
-            <Route exact path="/" component={Home} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/post/list" component={List} />
-            <Route path="/post/detail" component={Detail} />
-          </StyledWithHeader>
-        )}
-      />
-    </Switch>
-  );
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/post/write" exact element={<Write />} />
+      </Routes>
+      <StyledWithHeader>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/post/list" element={<List />} />
+          <Route path="/post/detail" element={<Detail />} />
+        </Routes>
+      </StyledWithHeader>
+    </BrowserRouter>
+  )
 }
 
 const StyledWithHeader = styled.div`
@@ -46,5 +43,4 @@ const StyledWithHeader = styled.div`
   }
 `
 
-
-export default App;
+export default App
