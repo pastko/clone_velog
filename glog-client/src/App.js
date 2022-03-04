@@ -10,7 +10,9 @@ import Detail from './pages/board/Detail'
 function App() {
   return (
     <BrowserRouter>
-      <Header />
+      <StyledWithHeader>
+        <Header />
+      </StyledWithHeader>
       <Routes>
         <Route path="/post/write" exact element={<Write />} />
       </Routes>
