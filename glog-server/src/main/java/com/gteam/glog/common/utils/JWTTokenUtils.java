@@ -2,17 +2,16 @@ package com.gteam.glog.common.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gteam.glog.domain.dto.login.LoginRequestDTO;
-import com.gteam.glog.domain.entity.Users;
-import com.gteam.glog.login.repository.LoginRepository;
+import com.gteam.glog.domain.entity.users.Users;
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.graph.InvalidGraphException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
-import javax.servlet.http.Cookie;
+import javax.persistence.NoResultException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +19,7 @@ import java.util.Map;
 
 @Service
 @Log4j2
+@RequiredArgsConstructor
 public class JWTTokenUtils {
 
     @Value("${auth.tokenSecret}")
@@ -29,13 +29,7 @@ public class JWTTokenUtils {
     private static final long ACCESS_TOKEN_EXPIRED_TIME = 1 * 60  * 1000;       // 1분
     private static final long REFRESH_TOKEN_EXPIRED_TIME = 1 * 24 * 60 * 60 * 1000; // 1개월 => 1일로 변경
     private final ObjectMapper objectMapper;
-    private final LoginRepository loginRepository;
 
-    @Autowired
-    public JWTTokenUtils(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
-        this.objectMapper = new ObjectMapper();
-    }
 
     /**
      * jwt 토큰에서 만효되는 날짜 조회
@@ -92,6 +86,79 @@ public class JWTTokenUtils {
     }
 
     /**
+     * jwt 토큰에서 유효성 검사를 위한 subject 조회
+     *
+     * @param token -
+     * @return Token Subject values
+     */
+    private String getSubjectFromToken(String token) {
+        return getAllClaimsFromToken(token).getSubject();
+    }
+
+    /**
+     * Refresh Token 재발급 후 DB update
+     *
+     * @param users
+     * @return
+     */
+    private void updateIssuanceRefreshToken(Users users){
+//        if(users != null) {
+//            String key = this.issuanceRefreshToken(users);
+//            loginRepository.updateUserKey(users.getMail(), key);
+//        }else{
+//            log.info("updateIssuanceRefreshToken: false - {}",users.getMail());
+//        }
+    }
+
+    /**
+     * 헤더에 "Bearer "를 제거합니다.
+     *
+     * @param header -
+     */
+    private Boolean validationAuthorizationHeader(String header) {
+        if (header == null || !header.startsWith("Bearer ")) {
+            log.info("validationAuthorizationHeader : is not contain Bearer ");
+            return false;
+        }
+        return true;
+    }
+    private String extractToken(String authorizationHeader) {
+        return authorizationHeader.substring("Bearer ".length());
+    }
+
+    /**
+     * 토큰 유효성 검증
+     * 만료 기간 및 Subject 검증
+     * @param token
+     * @return boolean
+     */
+    private Boolean validateToken(String token) {
+        if(token != null) {
+            final String subject = getSubjectFromToken(token);
+            return (subject.equals(SUBJECT_KEY) && !isTokenExpired(token));
+        }else{
+            log.info("validateToken inner else : {}",token);
+            return false;
+        }
+    }
+
+    /**
+     * 토큰에 저장되어 있는 사용자 정보를 통하여 디비 조회
+     *
+     * @param key
+     * @return
+     */
+    private Boolean validateTokenForUsers(String key){
+//        try {
+//            Claims claims = this.getAllClaimsFromToken(key);
+//            return (null != loginRepository.getUsersByUserId(claims.get("mail").toString()).orElse(null));
+//        }catch (NoResultException e){
+//            log.info("validateTokenForUsers --- >  : {}",e.getCause());
+            return false;
+//        }
+    }
+
+    /**
      * 전달된 OBJECT로 Access Token 생성
      *
      * @param users -
@@ -137,62 +204,6 @@ public class JWTTokenUtils {
         }
     }
 
-    /**
-     * jwt 토큰에서 유효성 검사를 위한 subject 조회
-     *
-     * @param token -
-     * @return Token Subject values
-     */
-    private String getSubjectFromToken(String token) {
-        return getAllClaimsFromToken(token).getSubject();
-    }
-
-    /**
-     * Refresh Token 재발급 후 DB update
-     *
-     * @param users
-     * @return
-     */
-    private void updateIssuanceRefreshToken(Users users){
-        if(users != null) {
-            String key = this.issuanceRefreshToken(users);
-            loginRepository.updateUserKey(users.getMail(), key);
-        }else{
-            log.info("updateIssuanceRefreshToken: false - {}",users.getMail());
-        }
-    }
-
-    /**
-     * 헤더에 "Bearer "를 제거합니다.
-     *
-     * @param header -
-     */
-    private Boolean validationAuthorizationHeader(String header) {
-        if (header == null || !header.startsWith("Bearer ")) {
-            log.info("validationAuthorizationHeader : is not contain Bearer ");
-            return false;
-        }
-        return true;
-    }
-    private String extractToken(String authorizationHeader) {
-        return authorizationHeader.substring("Bearer ".length());
-    }
-
-    /**
-     * 토큰 유효성 검증
-     * 만료 기간 및 Subject 검증
-     * @param token
-     * @return boolean
-     */
-    private Boolean validateToken(String token) {
-        if(token != null) {
-            final String subject = getSubjectFromToken(token);
-            return (subject.equals(SUBJECT_KEY) && !isTokenExpired(token));
-        }else{
-            log.info("validateToken inner else : {}",token);
-            return false;
-        }
-    }
 
     /**
      * 리프레쉬 토큰을 사용하여 Access 토큰 재발 급
@@ -201,18 +212,18 @@ public class JWTTokenUtils {
      * @return AccessToken
      */
     public String reissuanceAccessToken(String refreshKey){
-        if(refreshKey != null){
-            Claims claims = this.getAllClaimsFromToken(refreshKey);
-            if( claims != null) {
-                return this.issuanceAccessToken(loginRepository.getUsersByUserId(claims.get("mail").toString()).orElse(null));
-            }else{
-                log.info("Cliams is null :  False");
-                return null;
-            }
-        }else{
-            log.info("Access Token reissuance : False - {}",refreshKey);
+//        if(refreshKey != null){
+//            Claims claims = this.getAllClaimsFromToken(refreshKey);
+//            if( claims != null) {
+//                return this.issuanceAccessToken(loginRepository.getUsersByUserId(claims.get("mail").toString()).orElse(null));
+//            }else{
+//                log.info("Cliams is null :  False");
+//                return null;
+//            }
+//        }else{
+//            log.info("Access Token reissuance : False - {}",refreshKey);
             return null;
-        }
+//        }
     }
     /**
      * 리프레쉬 토큰을 재발 급
@@ -223,11 +234,11 @@ public class JWTTokenUtils {
      * @return AccessToken
      */
     public void reissuanceRefreshToken(String mail){
-        if(mail != null) {
-            this.updateIssuanceRefreshToken(loginRepository.getUsersByUserId(mail).orElse(null));
-        }else{
-            log.info("Refresh Token reissuance : False - {}",mail);
-        }
+//        if(mail != null) {
+//            this.updateIssuanceRefreshToken(loginRepository.getUsersByUserId(mail).orElse(null));
+//        }else{
+//            log.info("Refresh Token reissuance : False - {}",mail);
+//        }
     }
 
     /**
@@ -240,52 +251,56 @@ public class JWTTokenUtils {
      *        >  인증서가 유효함 : true
      *        >  인증서가 유효하지 않음 : false
      */
-    public Boolean validateAccessInfoByToken(String key, String mail){
+    public Boolean validateAccessInfoByToken(String key){
         try {
             // Bearer 제거
             if(!this.validationAuthorizationHeader(key)){
                 log.info("토큰이 존재 하지 않습니다.");
                 return false;
             }
-
             key = this.extractToken(key);
-            Claims claims = this.getAllClaimsFromToken(key);
-            return (this.validateToken(key) && claims.get("mail").equals(mail));
+            return (this.validateToken(key) && this.validateTokenForUsers(key));
         }catch (IllegalArgumentException e){
             log.info("토큰이 유효하지 않습니다.");
             return false;
         }catch (ExpiredJwtException e){
             log.info("토큰이 만로 되었습니다.");
             return false;
-        } catch(Exception e) {
+        } catch(NoResultException e) {
             log.info("토큰이 존재하지 않습니다.");
             return false;
         }
-
     }
-
-
-
     /**
      * Refresh Token을 재발급하여 반환
      * 1. 저장되어 있는 Refresh Token 조회
      * 2. 조회한 token과 key값 비교
      *
      * @param key - Cookie에 저장된 Refresh Token
-     * @param mail - 사용자 Id
      * @return
      *       > Refresh Token 검증 성공 : ture
      *       > 검증 실패 (만료 & key not equals) : false
      */
-    public Boolean validateRefreshToken(String key, String mail){
-        String token = this.getRefreshToken(mail);
-        if(token != null || key != null) {
-            return (this.validateToken(token) && token.equals(key));
-        }else{
-            log.info("validateRefreshToken : false - {},{}",key,mail);
+    public Boolean validateRefreshToken(String key){
+        try{
+            return (this.validateToken(key) && this.validateTokenForUsers(key));
+        }catch (NoResultException e){
+            log.info("validateRefreshToken : false - {}",e.getCause());
             return false;
         }
     }
+
+    /**
+     * 토큰에 저장되어 있는 사용자 정보 조회
+     * @param key
+     * @return
+     */
+    public String getUserInfoToToken(String key){
+        return this.getAllClaimsFromToken(key).get("mail").toString();
+    }
+
+
+
 
 
     /**
@@ -295,11 +310,11 @@ public class JWTTokenUtils {
      * @return
      */
     public String getRefreshToken(String mail){
-        if(mail != null) {
-            return loginRepository.getUsersByUserId(mail).orElse(null).getKey();
-        }else{
-            log.info("getRefreshToken : false {}",mail);
+//        if(mail != null) {
+//            return loginRepository.getUsersByUserId(mail).orElse(null).getKey();
+//        }else{
+//            log.info("getRefreshToken : false {}",mail);
             return null;
-        }
+//        }
     }
 }

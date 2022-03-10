@@ -3,6 +3,7 @@ package com.gteam.glog.config;
 import com.gteam.glog.config.jwtfilter.JWTAuthenticationEntryPoint;
 import com.gteam.glog.config.jwtfilter.JWTAuthenticationFilter;
 import com.gteam.glog.config.jwtfilter.JWTExceptionHandlerFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,32 +29,25 @@ import java.util.Collections;
 public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 
     private AuthenticationManagerBuilder builder;
-    private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JWTAuthenticationFilter jwtAuthenticationFilter;
-
-
-    public SecurityJavaConfig(JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint, JWTAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
-
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors().and()
+                .cors().disable()
                 .csrf().disable()
                 .formLogin().disable()
+
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
 
-                .and()
+//                .addFilterBefore(new CorsConFilter(),UsernamePasswordAuthenticationFilter.class)
+//                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//                .and()
+
                 .authorizeRequests()
-                .antMatchers("/signin","/signup", "/board", "/oauth/**").permitAll()
-                .anyRequest().authenticated().and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
+                .antMatchers("/api/**", "/board", "/oauth/**","/swagger-ui.html").permitAll()
+                .anyRequest().authenticated();
+//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -68,23 +62,5 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
         this.builder = builder;
         this.builder
                 .authenticationProvider(authenticationProvider);
-    }
-//     CORS 허용 적용
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
-        configuration.setAllowCredentials(false);
-        configuration.addAllowedOrigin("http://localhost:3000");
-        configuration.addAllowedOrigin("http://localhost:8080");
-        configuration.addAllowedOrigin("http://**");
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedMethod("*");
-        configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "responseType", "Authorization"));
-
-
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }

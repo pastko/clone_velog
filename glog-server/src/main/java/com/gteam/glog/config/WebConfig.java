@@ -9,12 +9,11 @@ import java.util.Collections;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOriginPatterns("*")
-                .allowedOrigins("http://localhost:3000/")
-                .allowedOrigins("http://localhost:8080/")
                 .allowedOrigins("*")
                 .allowedHeaders("*")
                 .allowedMethods("*");

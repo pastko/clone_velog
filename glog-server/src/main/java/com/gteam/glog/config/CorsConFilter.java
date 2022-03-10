@@ -10,14 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Log4j2
-
 public class CorsConFilter extends OncePerRequestFilter {
 
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, SecurityException{
-        log.info("<<<<<<<< CorsFilter : origin {} : {}",request.getHeader("Access-Control-Allow-Origin"));
+        log.info("<<<<<<<< CorsFilter : origin {} : {}",request.getHeader("au"));
         try {
             response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Access-Control-Allow-Credentials", "true");

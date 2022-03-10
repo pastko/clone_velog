@@ -5,12 +5,9 @@ import com.gteam.glog.domain.dto.oauth.GitOAuthResponseDTO;
 import com.gteam.glog.domain.dto.oauth.GitOAuthUserInfoResponseDTO;
 import com.gteam.glog.domain.dto.oauth.GoogleOAuthResponseDTO;
 import com.gteam.glog.domain.dto.oauth.GoogleOAuthUserInfoResponseDTO;
-import com.gteam.glog.domain.entity.Mypage;
-import com.gteam.glog.domain.enums.SocialLoginType;
 import com.gteam.glog.oauth.repository.OAuthRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

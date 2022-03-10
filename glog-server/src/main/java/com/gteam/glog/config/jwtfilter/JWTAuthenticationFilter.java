@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Log4j2
-@Component
+
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final JWTTokenUtils jwtTokenUtils;
     private final JWTUserDetailService detailService;
@@ -35,9 +35,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             log.info("Get URL : {}",request.getRequestURI());
             if(passURLFilter(request)) {
                 // access token 검증
-                if (jwtTokenUtils.validateAccessInfoByToken(request.getHeader("authorization"), request.getHeader("X-USER-ID"))) {
+                if (jwtTokenUtils.validateAccessInfoByToken(request.getHeader("authorization"))) {
                     // 검증 성공시 인증정보를 UserAuthentication에 등록하여 SecurityContextHolder에 등록
-                    UserAuthentication authentication = new UserAuthentication(request.getHeader("X-USER-ID"), null,null); //id를 인증한다.
+                    UserAuthentication authentication = new UserAuthentication(jwtTokenUtils.getUserInfoToToken(request.getHeader("authorization")), null,null); //id를 인증한다.
                     authentication.setDetails(detailService);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
@@ -45,8 +45,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                     String refreshToken = cookiesUtils.readServletCookie(request,"refresh").orElse(null);
                     if( refreshToken != null) {
                         // refresh token가 존재 할시 refresh token 검증 후 access token 재발급
-                        if (jwtTokenUtils.validateRefreshToken(refreshToken, request.getHeader("X-USER-ID"))) {
-                            UserAuthentication authentication = new UserAuthentication(request.getHeader("X-USER-ID"), null, null); //id를 인증한다.
+                        if (jwtTokenUtils.validateRefreshToken(refreshToken)) {
+                            UserAuthentication authentication = new UserAuthentication(jwtTokenUtils.getUserInfoToToken(request.getHeader("authorization")), null, null); //id를 인증한다.
                             authentication.setDetails(detailService);
 
                             //TODO : access token reissurance
@@ -75,9 +75,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private Boolean passURLFilter(HttpServletRequest request){
-        return ((!request.getRequestURI().contains("signin")) &&
-                (!request.getRequestURI().contains("signup")) &&
-                (!request.getRequestURI().contains("board")) &&
+        return ((!request.getRequestURI().contains("signin"))   &&
+                (!request.getRequestURI().contains("signup"))   &&
+                (!request.getRequestURI().contains("board"))    &&
+                (!request.getRequestURI().contains("swagger"))  &&
                 (!request.getRequestURI().contains("oauth")));
     }
 }

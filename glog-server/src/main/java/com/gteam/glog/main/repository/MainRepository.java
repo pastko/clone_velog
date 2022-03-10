@@ -31,7 +31,7 @@ public class MainRepository {
             PostContentsDTO postContentsDTO = new PostContentsDTO();
 
             postContentsDTO.setIdx(resultList.get(i).getBoard().getIdx());
-            postContentsDTO.setNikNm(resultList.get(i).getBoard().getUsr_idx().getNikNm());
+//            postContentsDTO.setNikNm(resultList.get(i).getBoard().getUsr_idx().getNikNm());
             postContentsDTO.setTitle(resultList.get(i).getTitle());
             postContentsDTO.setImgNm(resultList.get(i).getImg_nm());
             postContentsDTO.setContents(resultList.get(i).getContents());

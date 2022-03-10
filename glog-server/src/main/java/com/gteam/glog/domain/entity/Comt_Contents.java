@@ -19,10 +19,6 @@ public class Comt_Contents {
     @Column(name = "comt_cont_idx")
     private int idx;
 
-    @ManyToOne
-    @JoinColumn(name = "usr_idx")
-    private Mypage usr_idx;
-
     @Column(name = "cret_dt")
     private Date cret_dt;
 
