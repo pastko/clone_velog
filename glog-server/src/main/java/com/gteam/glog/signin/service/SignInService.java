@@ -58,8 +58,12 @@ public class SignInService {
      *       > 사용자 검증 실패 : false
      */
     @Transactional
-    public Boolean doLogOut(Long id){
-        return usersRepository.findById(id).stream().map(entity->{entity.isLogout(); return entity;}).findAny().isPresent();
+    public Long doLogOut(Long id){
+        Users users = usersRepository.findById(id).orElseThrow(()->{
+            return new IllegalArgumentException("사용자가 존재 하지 않습니다.");
+        });
+        users.isLogout();
+        return users.getIdx();
     }
 
 

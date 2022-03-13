@@ -1,8 +1,8 @@
 package com.gteam.glog.common.utils;
 
 
-
 import com.gteam.glog.domain.dto.ResponseDTO;
+import com.gteam.glog.domain.enums.LoginErrorCode;
 import com.gteam.glog.domain.enums.ResponseStatusCode;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -15,29 +15,61 @@ public class ResponseDTOUtils {
     /**
      * Generater ResponseDTO
      *
-     * @param data  - Response Data
+     * @param data - Response Data
      * @return - ResponseEntity
      */
-    public ResponseEntity<?> doGenerateResponseDTO(Object data){
-        log.info("Response DTO - {}",data);
-        if(data != null) {
-            return ResponseEntity
-                    .status(ResponseStatusCode.OK.get()).header("Content-Type","application/json")
-                    .body(ResponseDTO
-                            .builder()
-                            .success(true)
-                            .data(data)
-                            .msg(ResponseStatusCode.OK.getMsg())
-                            .build());
-        }else{
-            return ResponseEntity
-                    .status(ResponseStatusCode.BADREQUEST.get()).header("Content-Type","application/json")
-                    .body(ResponseDTO
-                            .builder()
-                            .success(false)
-                            .data(null)
-                            .msg(ResponseStatusCode.BADREQUEST.getMsg())
-                            .build());
-        }
+    public ResponseEntity<?> doGenerateResponseDTO(Object data) {
+        ResponseDTO responseDTO = ResponseDTO
+                .builder()
+                .status(202)
+                .data(data)
+                .msg(ResponseStatusCode.OK.getMsg())
+                .build();
+
+        log.info(responseDTO.toString());
+        return doGenerateResponseEntity(responseDTO);
+    }
+
+    /**
+     *
+     * @param data
+     * @param responseStatusCode
+     * @return
+     */
+    public ResponseEntity<?> doGenerateResponseDTO(Object data,ResponseStatusCode responseStatusCode) {
+        ResponseDTO responseDTO = ResponseDTO
+                .builder()
+                .status(responseStatusCode.get())
+                .data(data)
+                .msg(ResponseStatusCode.OK.getMsg())
+                .build();
+
+        log.info(responseDTO.toString());
+        return doGenerateResponseEntity(responseDTO);
+    }
+
+    /**
+     *
+     * @param data
+     * @param loginErrorCode
+     * @return
+     */
+    public ResponseEntity<?> doGenerateResponseDTO(Object data, LoginErrorCode loginErrorCode) {
+        ResponseDTO responseDTO = ResponseDTO
+                .builder()
+                .status(loginErrorCode.getStatus())
+                .data(data)
+                .msg(loginErrorCode.getDescription())
+                .build();
+
+        log.info(responseDTO.toString());
+        return doGenerateResponseEntity(responseDTO);
+    }
+
+
+    private ResponseEntity<?> doGenerateResponseEntity(ResponseDTO responseDTO) {
+        return ResponseEntity
+                .status(responseDTO.getStatus()).header("Content-Type", "application/json")
+                .body(responseDTO);
     }
 }

@@ -3,6 +3,8 @@ package com.gteam.glog.signin.controller;
 import com.gteam.glog.common.utils.ResponseDTOUtils;
 import com.gteam.glog.domain.dto.ReturnIdResponseDTO;
 import com.gteam.glog.domain.dto.login.LoginRequestDTO;
+import com.gteam.glog.domain.enums.LoginErrorCode;
+import com.gteam.glog.domain.enums.ResponseStatusCode;
 import com.gteam.glog.signin.service.SignInService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,8 @@ public class SignInController {
                                     HttpServletResponse response){
 
         log.info("Sign In : {}", loginRequestDTO.getMail());
-        return responseDTOUtils.doGenerateResponseDTO(ReturnIdResponseDTO.builder()
+        return responseDTOUtils.doGenerateResponseDTO(
+                ReturnIdResponseDTO.builder()
                 .id(loginService.doLogin(loginRequestDTO))
                 .build());
     }
@@ -37,13 +40,30 @@ public class SignInController {
     @ApiOperation(value = "로그인 아웃 API", notes = "사용자 로그아웃 API")
     public ResponseEntity<?> signOut(@PathVariable("id")Long id, HttpServletResponse response){
         log.info("Sign Out :");
-        if(loginService.doLogOut(id)){
-            return responseDTOUtils.doGenerateResponseDTO("logout Success");
-        }else {
-            return responseDTOUtils.doGenerateResponseDTO(null);
-        }
+
+        return responseDTOUtils.doGenerateResponseDTO(
+                ReturnIdResponseDTO.builder()
+                .id(loginService.doLogOut(id))
+                .build());
     }
 
-    @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Data Not Found")
-    public class DataNotFoundException extends RuntimeException { }
+    /**
+     * user not found exception
+     *
+     * @return
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> argumentException(){
+        return responseDTOUtils.doGenerateResponseDTO(null, LoginErrorCode.OperationNotAuthorized);
+    }
+
+    /**
+     * null exception
+     *
+     * @return
+     */
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<?> nulltException(){
+        return responseDTOUtils.doGenerateResponseDTO(null, LoginErrorCode.OperationNotAuthorized);
+    }
 }
