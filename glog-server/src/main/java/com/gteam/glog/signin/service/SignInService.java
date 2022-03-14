@@ -60,7 +60,7 @@ public class SignInService {
     @Transactional
     public Long doLogOut(Long id){
         Users users = usersRepository.findById(id).orElseThrow(()->{
-            return new IllegalArgumentException("사용자가 존재 하지 않습니다.");
+            throw new IllegalArgumentException("사용자가 존재 하지 않습니다.");
         });
         users.isLogout();
         return users.getIdx();

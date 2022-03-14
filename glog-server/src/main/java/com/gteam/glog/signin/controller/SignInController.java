@@ -53,8 +53,8 @@ public class SignInController {
      * @return
      */
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> argumentException(){
-        return responseDTOUtils.doGenerateResponseDTO(null, LoginErrorCode.OperationNotAuthorized);
+    public ResponseEntity<?> argumentException(Exception e){
+        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), LoginErrorCode.NOT_FOUND);
     }
 
     /**
@@ -63,7 +63,7 @@ public class SignInController {
      * @return
      */
     @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<?> nulltException(){
-        return responseDTOUtils.doGenerateResponseDTO(null, LoginErrorCode.OperationNotAuthorized);
+    public ResponseEntity<?> nulltException(Exception e){
+        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), LoginErrorCode.NOT_FOUND);
     }
 }

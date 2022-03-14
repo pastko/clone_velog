@@ -7,6 +7,7 @@ import com.gteam.glog.domain.entity.users.Users;
 import com.gteam.glog.domain.entity.users.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public class SignUpService {
     @Transactional
     public ReturnIdResponseDTO createUser(SignUpRequestDTO userInfoDTO) {
         if(usersRepository.findByMail(userInfoDTO.getMail()).isPresent()){
-            return ReturnIdResponseDTO.builder().id(null).build();
+            throw new DuplicateKeyException("동일한 아이디가 존재 합니다.");
         }else{
             Users users = Users.initUsers()
                     .mail(userInfoDTO.getMail())
