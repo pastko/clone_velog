@@ -31,21 +31,14 @@ public class ResponseDTO {
         this.status = status;
     }
 
-    public String getMessage() {
+    public String getMsg() {
         return this.msg;
     }
 
-    public void setMessage(String msg) {
+    public void setMsg(String msg) {
         this.msg = msg;
     }
 
-    public Object getResult() {
-        return this.data;
-    }
-
-    public void setResult(Object result) {
-        this.data = result;
-    }
 
     @Override
     public String toString() {
