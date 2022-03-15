@@ -3,6 +3,7 @@ package com.gteam.glog.mypage.service;
 import com.gteam.glog.common.utils.JWTTokenUtils;
 import com.gteam.glog.domain.dto.ReturnIdResponseDTO;
 import com.gteam.glog.domain.dto.UserInfoDTO;
+import com.gteam.glog.domain.entity.users.Users;
 import com.gteam.glog.domain.entity.users.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
-    private final JWTTokenUtils jwtTokenUtils;
     private final UsersRepository usersRepository;
 
     /**
@@ -38,7 +38,9 @@ public class MyPageService {
                             .imgNm(entity.getImgNm())
                             .glogTitle(entity.getGlogTitle())
                             .build()
-        ).findAny().orElse(null);
+        ).findAny().orElseThrow(()->{
+            throw new IllegalArgumentException("사용자가 존재하지 않습니다.");
+                });
     }
 
 
@@ -57,11 +59,10 @@ public class MyPageService {
      */
     @Transactional
     public ReturnIdResponseDTO saveUserInfo(UserInfoDTO userInfoDTO){
-        return ReturnIdResponseDTO.builder().id(usersRepository.findByMail(userInfoDTO.getMail())
-                .stream()
-                .map(entity-> entity.update(userInfoDTO))
-                .findAny()
-                .orElse(null))
-                .build();
+        Users users = usersRepository.findByMail(userInfoDTO.getMail()).orElseThrow(()->{
+            throw new IllegalArgumentException("사용자가 존재하지 않습니다.");
+        });
+        users.update(userInfoDTO);
+        return ReturnIdResponseDTO.builder().id(users.getIdx()).build();
     }
 }

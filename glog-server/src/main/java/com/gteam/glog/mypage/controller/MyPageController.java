@@ -4,6 +4,7 @@ import com.gteam.glog.common.utils.JWTTokenUtils;
 import com.gteam.glog.common.utils.ResponseDTOUtils;
 import com.gteam.glog.domain.dto.UserInfoDTO;
 import com.gteam.glog.domain.entity.users.UsersRepository;
+import com.gteam.glog.domain.enums.LoginErrorCode;
 import com.gteam.glog.mypage.service.MyPageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -25,7 +27,6 @@ import javax.validation.constraints.Size;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class MyPageController {
-    private final JWTTokenUtils jwtTokenUtils;
     private final ResponseDTOUtils responseDTOUtils;
     private final MyPageService myPageService;
 
@@ -56,4 +57,25 @@ public class MyPageController {
         log.info("--> updateMypage : - {}",userInfoDTO.getMail());
         return responseDTOUtils.doGenerateResponseDTO(myPageService.saveUserInfo(userInfoDTO));
     }
+
+    /**
+     * user not found exception
+     *
+     * @return
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> argumentException(Exception e){
+        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), LoginErrorCode.NOT_FOUND);
+    }
+
+    /**
+     * Validation Exception
+     *
+     * @return
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> nulltException(Exception e){
+        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), LoginErrorCode.FAILED_VALIDATION);
+    }
+
 }

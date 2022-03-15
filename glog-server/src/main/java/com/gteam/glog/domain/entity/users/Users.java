@@ -49,6 +49,8 @@ public class Users extends TimeStamp {
         this.mail = mail;
         this.nikNm = nikNm;
         this.pwd = pwd;
+        this.glogTitle = mail;
+        this.imgNm = "initDefault.img";
         this.status = UserStatusCode.LOGOUT;
     }
 
