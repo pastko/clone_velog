@@ -40,11 +40,10 @@ public class SignUpService {
 
     @Transactional
     public ReturnIdResponseDTO unRegistUser(Long id) {
-        if(usersRepository.findById(id).isPresent()){
-            usersRepository.deleteById(id);
-            return ReturnIdResponseDTO.builder().id(id).build();
-        }else {
-            return ReturnIdResponseDTO.builder().id(null).build();
-        }
+        Users users = usersRepository.findById(id).orElseThrow(()->{
+            throw new IllegalArgumentException("사용자가 존재 하지 않습니다.");
+        });
+        users.isSignDrop();
+        return ReturnIdResponseDTO.builder().id(users.getIdx()).build();
     }
 }

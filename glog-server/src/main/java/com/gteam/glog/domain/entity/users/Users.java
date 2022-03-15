@@ -66,4 +66,6 @@ public class Users extends TimeStamp {
     public void isLogout(){
         this.status = UserStatusCode.LOGOUT;
     }
+
+    public void isSignDrop() {this.status = UserStatusCode.UNREGISTER;}
 }
