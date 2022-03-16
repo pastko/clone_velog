@@ -1,17 +1,16 @@
-import styled from 'styled-components';
-import { Switch, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Header from "./components/common/Header";
-import Profile from './pages/mypage/Profile';
-import Write from './pages/board/Write';
-import List from './pages/board/List';
-import Detail from './pages/board/Detail';
+import styled from 'styled-components'
+import { Switch, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Header from './components/common/Header'
+import Profile from './pages/mypage/Profile'
+import Write from './pages/board/Write'
+import List from './pages/board/List'
+import Detail from './pages/board/Detail'
 
 function App() {
-
   return (
     <Switch>
-      <Route path="/post/write" exact component={Write} />
+      <Route path="post/write" exact component={Write} />
       <Route
         exact
         path="*"
@@ -26,7 +25,7 @@ function App() {
         )}
       />
     </Switch>
-  );
+  )
 }
 
 const StyledWithHeader = styled.div`
@@ -46,5 +45,4 @@ const StyledWithHeader = styled.div`
   }
 `
 
-
-export default App;
+export default App

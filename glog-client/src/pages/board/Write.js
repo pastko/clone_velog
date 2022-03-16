@@ -10,7 +10,7 @@ import styled from 'styled-components'
 
 function Write(props) {
   const dispatch = useDispatch()
-  const postIdx = props.match.params.idx
+  //const postIdx = props.match.params.idx
   const users = useSelector((state) => {
     console.log('user :: ', state.user)
   })
@@ -45,11 +45,11 @@ function Write(props) {
     }
     debugger
 
-    if (postIdx) {
-      dispatch(boardActions.changePostAPI(postIdx, post))
-    } else {
-      dispatch(boardActions.addPostAPI(post))
-    }
+    // if (postIdx) {
+    //   dispatch(boardActions.changePostAPI(postIdx, post))
+    // } else {
+    //   dispatch(boardActions.addPostAPI(post))
+    // }
   }
 
   return (
