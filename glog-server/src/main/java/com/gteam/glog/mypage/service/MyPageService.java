@@ -1,6 +1,5 @@
 package com.gteam.glog.mypage.service;
 
-import com.gteam.glog.common.utils.JWTTokenUtils;
 import com.gteam.glog.domain.dto.ReturnIdResponseDTO;
 import com.gteam.glog.domain.dto.UserInfoDTO;
 import com.gteam.glog.domain.entity.users.Users;
@@ -35,7 +34,7 @@ public class MyPageService {
                             .mail(entity.getMail())
                             .pwd("")
                             .nikNm(entity.getNikNm())
-                            .imgNm(entity.getImgNm())
+                            .imgNm(entity.getProf_img())
                             .glogTitle(entity.getGlogTitle())
                             .build()
         ).findAny().orElseThrow(()->{

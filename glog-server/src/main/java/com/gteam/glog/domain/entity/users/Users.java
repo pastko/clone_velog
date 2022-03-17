@@ -33,8 +33,8 @@ public class Users extends TimeStamp {
     @NotNull
     private String pwd;
 
-    @Column(name = "img_nm")
-    private String imgNm;
+    @Column(name = "profile_img")
+    private String prof_img;
 
     @Column(name = "glog_title")
     private String glogTitle;
@@ -50,13 +50,13 @@ public class Users extends TimeStamp {
         this.nikNm = nikNm;
         this.pwd = pwd;
         this.glogTitle = mail;
-        this.imgNm = "initDefault.img";
+        this.prof_img = "initDefault.img";
         this.status = UserStatusCode.LOGOUT;
     }
 
     public Long update(UserInfoDTO userInfoDTO){
         this.nikNm = userInfoDTO.getNikNm();
-        this.imgNm = userInfoDTO.getImgNm();
+        this.prof_img = userInfoDTO.getImgNm();
         this.glogTitle = userInfoDTO.getGlogTitle();
         return this.idx;
     }
