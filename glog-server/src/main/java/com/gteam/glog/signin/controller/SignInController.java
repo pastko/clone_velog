@@ -3,17 +3,14 @@ package com.gteam.glog.signin.controller;
 import com.gteam.glog.common.utils.ResponseDTOUtils;
 import com.gteam.glog.domain.dto.ReturnIdResponseDTO;
 import com.gteam.glog.domain.dto.login.LoginRequestDTO;
-import com.gteam.glog.domain.enums.LoginErrorCode;
-import com.gteam.glog.domain.enums.ResponseStatusCode;
+import com.gteam.glog.domain.enums.ErrorCode;
 import com.gteam.glog.signin.service.SignInService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @Log4j2
@@ -54,7 +51,7 @@ public class SignInController {
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> argumentException(Exception e){
-        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), LoginErrorCode.NOT_FOUND);
+        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), ErrorCode.NOT_FOUND);
     }
 
     /**
@@ -64,6 +61,6 @@ public class SignInController {
      */
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<?> nulltException(Exception e){
-        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), LoginErrorCode.NOT_FOUND);
+        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), ErrorCode.NOT_FOUND);
     }
 }

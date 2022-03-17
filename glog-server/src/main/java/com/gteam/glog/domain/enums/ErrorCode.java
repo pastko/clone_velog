@@ -1,6 +1,6 @@
 package com.gteam.glog.domain.enums;
 
-public enum LoginErrorCode {
+public enum ErrorCode {
 
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
@@ -26,7 +26,7 @@ public enum LoginErrorCode {
     private int status;
     private String description;
 
-    private LoginErrorCode(int code, int status, String description) {
+    private ErrorCode(int code, int status, String description) {
         this.code = code;
         this.status = status;
         this.description = description;

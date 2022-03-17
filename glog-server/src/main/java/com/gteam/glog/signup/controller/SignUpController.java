@@ -2,7 +2,7 @@ package com.gteam.glog.signup.controller;
 
 import com.gteam.glog.common.utils.ResponseDTOUtils;
 import com.gteam.glog.domain.dto.SignUpRequestDTO;
-import com.gteam.glog.domain.enums.LoginErrorCode;
+import com.gteam.glog.domain.enums.ErrorCode;
 import com.gteam.glog.signup.service.SignUpService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 
 @Log4j2
 @Valid
@@ -47,7 +46,7 @@ public class SignUpController {
      */
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<?> duplicationException(Exception e){
-        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), LoginErrorCode.DUPLICATE_RESOURCE);
+        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), ErrorCode.DUPLICATE_RESOURCE);
     }
 
     /**
@@ -57,6 +56,6 @@ public class SignUpController {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<?> nulltException(Exception e){
-        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), LoginErrorCode.FAILED_VALIDATION);
+        return responseDTOUtils.doGenerateResponseDTO(e.getMessage(), ErrorCode.FAILED_VALIDATION);
     }
 }

@@ -2,7 +2,7 @@ package com.gteam.glog.common.utils;
 
 
 import com.gteam.glog.domain.dto.ResponseDTO;
-import com.gteam.glog.domain.enums.LoginErrorCode;
+import com.gteam.glog.domain.enums.ErrorCode;
 import com.gteam.glog.domain.enums.ResponseStatusCode;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +54,7 @@ public class ResponseDTOUtils {
      * @param loginErrorCode
      * @return
      */
-    public ResponseEntity<?> doGenerateResponseDTO(Object data, LoginErrorCode loginErrorCode) {
+    public ResponseEntity<?> doGenerateResponseDTO(Object data, ErrorCode loginErrorCode) {
         ResponseDTO responseDTO = ResponseDTO
                 .builder()
                 .status(loginErrorCode.getStatus())
