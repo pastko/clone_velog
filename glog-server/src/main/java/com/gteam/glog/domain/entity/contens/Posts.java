@@ -20,7 +20,7 @@ public class Posts extends TimeStamp {
     @Column(name = "`idx`")
     private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usr_idx")
     private Users users;
 
@@ -39,14 +39,14 @@ public class Posts extends TimeStamp {
     @Column(name = "contHtml")
     private String html;
 
-    @Builder(builderClassName = "initContens", builderMethodName = "initContens")
-    public Posts(Users users, String title_nm, String title_img, String contents, String tag, String html) {
+    @Builder(builderClassName = "initPost", builderMethodName = "initPost")
+    public Posts(Users users,PostsInfoDTO postsInfoDTO) {
         this.users = users;
-        this.title_nm = title_nm;
-        this.title_img = title_img;
-        this.contents = contents;
-        this.tag = tag;
-        this.html = html;
+        this.title_nm = postsInfoDTO.getTitle_nm();
+        this.title_img = postsInfoDTO.getTitle_img();
+        this.contents = postsInfoDTO.getContents();
+        this.tag = postsInfoDTO.getTag();
+        this.html = postsInfoDTO.getHtml();
     }
 
     public Long Update(PostsInfoDTO postsInfoDTO){
@@ -54,7 +54,19 @@ public class Posts extends TimeStamp {
         this.title_img = postsInfoDTO.getTitle_img();
         this.contents = postsInfoDTO.getContents();
         this.tag = postsInfoDTO.getTag();
+        this.html = postsInfoDTO.getHtml();
         return this.idx;
     }
 
+    public PostsInfoDTO getPostDTO(){
+        return PostsInfoDTO.updatePosts()
+                .idx(this.idx)
+                .title_nm(this.title_nm)
+                .title_img(this.title_img)
+                .contents(this.contents)
+                .tag(this.tag)
+                .html(this.html)
+                .user_idx(this.getUsers().getIdx())
+                .build();
+    }
 }
